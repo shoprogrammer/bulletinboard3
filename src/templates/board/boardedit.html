@@ -1,0 +1,29 @@
+{% extends "base/base.html" %}
+
+{% block title %}{{board.title}}の編集画面{% endblock %}
+
+
+{% block content %}
+<h1>ボードを編集します</h1>
+    <section>
+        <form action="{% url 'update-board' board.pk %}" method="post" enctype="multipart/form-data" class="mt-4">
+            {% csrf_token %}
+                 <div class="mb-3">
+                    <label for="{{ form.title.id_for_label }}">タイトル</label>
+                </div>
+                 {{ form.title }}<br>
+                <div class="mb-3">
+                    <label for="{{ form.content.id_for_label }}">内容</label>
+                </div>
+                {{ form.content}}<br>
+                <div class="mb-3">
+                    <label for="{{ form.image.id_for_label }}">写真</label>
+                </div>
+                {{ form.image }}<br><br>
+            <button type="submit"class="btn btn-warning">更新する</button>
+        </form>
+    </section>
+
+
+
+{% endblock %}

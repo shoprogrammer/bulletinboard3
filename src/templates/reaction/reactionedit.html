@@ -1,0 +1,37 @@
+{% extends "base/base.html" %}
+
+{% block title %}コメント編集{% endblock %}
+
+
+{% block content %}
+
+
+
+<h1>「{{reactiont.content}}」の編集フォームです</h1>
+pk
+{{board.pk}}
+{{comment.pk}}
+{{reaction.pk}}
+
+
+<form action="{% url 'update-reaction' board.pk comment.pk reaction.pk %}" enctype="multipart/form-data" method="post">
+    {% csrf_token %}
+    <div class="form-group mb-3">
+        <label>内容:</label>
+    </div>
+    {{ reaction_form.content }}
+    <br>
+    <div class="form-group mb-3">
+        <label>写真:</label>
+    </div>
+    {{ reaction_form.image }}
+
+    <button type="submit" class="btn btn-primary">更新する</button>
+
+    
+
+</form>
+</div>
+
+
+{% endblock %}

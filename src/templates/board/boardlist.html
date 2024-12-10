@@ -1,0 +1,401 @@
+{% extends "base/base.html" %}
+
+{% block title %}みんなの投稿一覧{% endblock %}
+
+
+{% block content %}
+
+{% if not user.is_authenticated %}
+※ログインしないとボード一覧しか見ることができません
+{% endif %}
+
+
+<section>
+  {% if user.is_authenticated %}
+<!-- お気に入り上限 -->
+{% if boards_query <= 6%}
+{% else %}
+
+<div class="alert alert-danger mt-2" role="alert">
+  お気に入り追加の上限に達しました。
+</div>
+
+{% endif %}
+{% endif %}
+
+<h1>トレーニーの巣へようこそ</h1>
+<form type="get" action="{% url "search-board" %}" class="d-flex">
+  <div class="col-md-3">
+  <input type="text" name="query" id="id_query" class="form-control" placeholder="検索">
+  </div>
+  <div class="col-md-2">
+  <select name="search_type" class="form-select">
+    <option value="partial">部分一致</option>
+    <option value="prefix">前方一致</option>
+    <option value="suffix">後方一致</option>
+
+    </select>
+    </div>
+  <button type="submit" class="btn btn-light">検索</button>
+</form>
+
+
+        <div class="d-flex">
+            <a href="{% url 'sort' %}?sort=title&direction={{ next_direction|default:'asc' }}" class="me-2">
+              {% include 'sort/direction.html' with sort_field='title' field=sort_by direction=direction %}
+
+
+          </a>
+
+                    
+            <h4 class="me-2"><p>一致件数:{{boards_count}}</p></h4>
+            </div>
+
+
+
+      <tbody>
+        
+
+        <div class="d-flex">
+        
+          {% for board in boards %}
+         
+            <div class="card" style="width: 9rem;">
+              <tr>
+               
+              <a href="{% url 'detail-board' board.pk %}" class="btn btn-outline-primary">{{board.title}}</a></th>
+              
+              <div class="d-flex justify-content-center mt-auto">
+              {% if boards_query <= 6%}
+                {% if user.is_authenticated %}
+                  {% if board.is_favorite %}
+                  <form action="{% url 'remove_favorite' %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="board" value="{{board.id}}">
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-clipboard-heart-fill"></i></button>
+
+                  </form>
+                  {% else %}
+                  <form action="{% url 'add_favorite' %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="board" value="{{board.id}}">
+                    <button type="submit" class="btn btn-outline-primary"><i class="bi bi-clipboard-heart-fill"></i></button>
+
+                  </form>
+
+
+
+
+                  {% endif %}
+                  {% endif %}
+                  {% endif %}
+                </div>
+                </div>
+
+              </th>
+     
+              </tr>
+         
+          
+          {% endfor %}
+        </div>
+          </tbody>
+          <div class="text-center">
+            <hr>
+        <h2>∫ジャンル一覧∫</h2></div>
+
+            <hr>
+
+
+
+            <div class="d-flex">
+            コメント数でソート
+            <a href="{% url 'board-commentsort' %}?sort=comment_count&ddirection={{ next_ddirection|default:'aasc' }}">
+
+              {% if sort_field == field %}
+                {% if ddirection == 'aasc' %}
+               
+                <button class="btn btn-primary ms-2">  
+                  <i class="bi bi-arrow-down">down</i>
+            </button> 
+
+
+                {% else %}
+                <button class="btn btn-primary ms-2">
+                <i class="bi bi-arrow-up">up</i>
+                </button>
+                {% endif %}
+              {% else %}
+             
+              {% endif %}
+
+            </a>
+            <div class="d-flex">
+            投稿日時でソート 
+            <a href="{% url 'sort' %}">
+
+                {% if result == False %}
+                <form action="{% url 'sort' %}" method="POST">
+                  {% csrf_token %}
+                  
+  
+                  <button type="submit" class="btn btn-primary me-2">  
+                    <i class="bi bi-arrow-down">down</i>
+              </button> 
+                 </form>
+  
+                 {% else %}
+                 <form action="{% url 'sort' %}" method="POST">
+                  {% csrf_token %}
+                  
+  
+                  <button type="submit" class="btn btn-primary me-2">  
+                    <i class="bi bi-arrow-up">up</i>
+              </button> 
+                 </form>
+              
+
+
+  
+                  {% endif %} </a>
+                </div>
+                 
+                
+
+
+
+            
+
+
+
+               
+            
+
+           
+
+
+
+
+
+
+            
+
+          
+
+
+
+
+
+
+
+              更新日時でソート
+              <a href="{% url 'new-sort' %}?sort=updated_at&direction={{ next_direction|default:'asc' }}">
+                {% include 'sort/direction.html' with sort_field='updated_at' field=sort_by direction=direction %}
+
+              </a>
+            </div>
+
+
+
+
+
+
+
+
+
+
+          <!-- 表示ランキング用（コメント数で -->
+
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">掲示板id
+                  
+                </th>
+                <th scope="col">タイトル
+                  
+                </th>
+                <th scope="col">コメント数
+
+                </th>
+
+                {% if boards_query <= 6 %}
+                
+
+                <th scope="col">お気に入り</th>
+                {% else %}
+                {% endif %}
+
+                <th scope="col">投稿日時
+                 
+                </th>
+                <th scope="col">更新日時
+                  
+                </th>
+                <th scope="col">投稿者</th>
+              
+              <th scope="col">いいね</th>
+
+              </tr>
+              
+            </thead>
+      
+            <tbody>
+                {% for board in boards %}
+                    <tr>
+                    <th scope="col">{{board.id}}
+      
+      
+                    </th>
+      
+      
+                    <th scope="col"><a href="{% url 'detail-board' board.pk %}">{{board.title}}</a></th>
+                    <th scope="col">{{board.comment_count}}comments
+                  
+                    </th>
+                    {% if boards_query <= 6%}
+                    <th scope="col">
+                      {% if user.is_authenticated %}
+                        {% if board.is_favorite %}
+                        <form action="{% url "remove_favorite" %}" method="POST">
+                          {% csrf_token %}
+                          <input type="hidden" name="board" value="{{ board.id }}">
+                          <button type="submit" class="btn btn-primary"><i class="bi bi-clipboard-heart-fill"></i></button>
+                        </form>
+                
+
+
+
+                        {% else %}
+                        <form action="{% url "add_favorite" %}" method="POST">
+                          {% csrf_token %}
+                          <input type="hidden" name="board" value="{{ board.id }}">
+                          <button type="submit" class="btn btn-outline-primary"><i class="bi bi-clipboard-heart-fill"></i></button>
+                        </form>
+
+
+
+
+
+
+                        {% endif %}
+                      {% endif %}
+
+
+                    </a></th>
+
+                    {% else %}
+                    {% endif %}
+
+                    <th scope="col">{{board.created_at}}</th>
+                    <th scope="col">{{board.updated_at}}</th>  
+                    <th scope="col">{{board.user}}</th>      
+                    
+                    <th scope="col">
+                      {% if user.is_authenticated %}
+                        {% if board.is_like %}
+                        
+                        
+
+
+
+                      
+                      <form action="{% url 'remove_like' %}" method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="board" value="{{ board.id }}">
+                        <button type="submit" class="btn btn-primary"><i class="bi bi-suit-heart-fill"></i></button>
+                      </form>
+                      {% else %}
+                      <form action="{% url 'add_like' %}" method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="board" value="{{ board.id }}">
+                        <button type="submit" class="btn btn-outline-primary"><i class="bi bi-suit-heart"></i></button>
+
+                      </form>
+
+
+
+
+
+
+
+                      {% endif %}
+                      {% endif %}
+
+
+
+
+                    </th>
+
+                    <th scope="col">
+                      {{board.is_like}}
+                    </th>
+
+                  </tr>
+
+
+
+                    </tr>
+      
+                <!-- 写真が保存されていた合 -->
+                    {% if board.image %}
+                      <img src="{{board.image.url}}" alt="{{ board.title }}" style="max-width: 200px; height: auto;"><br>>
+      
+                    {% else %}
+                    
+                    {% endif %}
+                {% endfor %}
+                </tbody>
+                </table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+           <a href={% url "new-board" %} class="btn btn-warning">作成</a>
+           {% if user.is_authenticated %}
+           <a href="{% url "my-board" %}" class="btn btn-primary">自分の投稿</a>
+           
+           <a href="{% url "display_favorite" %}" class="btn btn-primary">お気に入り</a>
+            {% endif %}
+
+</section>
+
+<!-- ページネーション -->
+ <selection class="pagination justify-content-center">
+  <ul class="pagination">
+    {% if boards.has_previous %}
+    
+      <a class="page-link" href="?page=1">&laquo;最初</a>
+    
+
+      <a class="page-link"href="?page={{ boards.previous_page_number }}">前へ</a>
+    {% endif %}
+    <li class="disabled">
+    <a class="page-link" href="#">ページ{{boards.number}}//{{boards.paginator.num_pages}}</a>
+    </li>
+
+    {% if boards.has_next %}
+      <a class="page-link" href="?page={{ boards.next_page_number }}">次へ</a>
+      <a class="page-link" href="?page={{ boards.paginator.num_pages }}">最後 &raquo;</a>
+    {% endif %}
+
+  
+
+
+    </ul>
+  </selection>
+
+{% endblock %}

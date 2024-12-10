@@ -1,0 +1,44 @@
+{% extends "base/base.html" %}
+
+{% block title %}ユーザー登録画面{% endblock %}
+
+
+{% block content %}
+
+    <section class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <h1>ユーザー登録画面</h1>
+        <form method="post">
+            {% csrf_token %}
+                 <div class="mb-3 row">
+                    <label for="id_username" class="col-sm-4 col-form-label">ユーザー名</label>
+                    <div class="col-sm-8">
+                 {{ form.username }}<br>
+                </div></div>
+                <div class="mb-3 row">
+                    <label for="id_email" class="col-sm-4 col-form-label">メールアドレス</label>
+                    <div class="col-sm-8">
+                {{ form.email}}<br>
+            </div></div>
+                <div class="mb-3 row">
+                    <label for="id_password1" class="col-sm-4 col-form-label">パスワード</label>
+                    <div class="col-sm-8">
+                {{ form.password1 }}<br>
+            </div></div>
+                <div class="mb-3 row">
+                    <label for="id_password2" class="col-sm-4 col-form-label">パスワード(確認用)</label>
+                    <div class="col-sm-8">
+                {{ form.password2 }}<br>    
+                <br> </div>
+            </div>
+                <div class="mb-3 row">
+                    <div class="col-sm-8 offset-sm-4">
+            <button type="submit"class="btn btn-warning">登録</button>
+        </div></div>
+        </form></div></div>
+    </section>
+
+
+
+{% endblock %}

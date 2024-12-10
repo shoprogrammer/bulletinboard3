@@ -1,0 +1,22 @@
+{% extends "base/base.html" %}
+
+{% block title %}ユーザー登録画面{% endblock %}
+
+
+{% block content %}
+
+    <section class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+             <h2>プロフィール画面</h2>
+             <p>ユーザー名:{{user.username}}</p>
+             <p>メールアドレス:{{user.email}}</p>
+
+            </div>
+        </div>
+        <a href="{% url 'board-list' %}" class="btn btn-warning">一覧に戻る</a>
+    </section>
+
+
+
+{% endblock %}

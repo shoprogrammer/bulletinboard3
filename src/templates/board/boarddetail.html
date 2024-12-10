@@ -1,0 +1,158 @@
+{% extends "base/base.html" %}
+
+{% block title %}{{board.title}}{% endblock %}
+
+
+{% block content %}
+<br>
+<!-- ページネーターによるコメント制限の報告 -->
+ {% if comments_query >= 5 %}
+ <div class="alert alert-danger" role="alert">
+    コメント数が最大に達しました。
+  </div>
+ {% else %}
+    
+
+ {% endif %}
+
+
+
+
+
+
+
+
+<section>
+
+
+    <h2>{{ board.title }}の詳細画面</h2>
+    <p>{{board.content}}</p>
+    <p>{{board.created_at}}</p>
+    <p>{{board.updated_at}}</p>
+    
+
+    <!-- 並び替え、投稿順 -->
+    <a href="{% url 'sort-comment' board.pk %}?sort=created_at&direction={{ next_direction|default:'asc '}}" class="btn btn-primary">時間で並び替える</a>
+  
+    {% include 'sort/direction.html' with field=sort_by sort_field='created_at' direction=direction %}
+      
+
+
+
+
+    {% if board.user == request.user %}
+    <a href="{% url 'edit-board' board.pk %}" class="btn btn-warning">更新</a>
+    <form action="{% url 'delete-board' board.pk %}" method="post" class="d-inline">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="delete">
+        <button type="submit" class="btn btn-danger">削除</button>
+    </form>
+
+    {% endif %}
+
+
+</section>
+
+    <section class="mt-3">
+        <form type="get" action="{% url "search-comment" board.pk %}">
+            <input type="text" name="query" id="id_query" placeholder="検索">
+            <select name="search_type">
+                <option value="partial">部分一致</option>
+                <option value="prefix">前方一致</option>
+                <option value="suffix">後方一致</option>
+
+
+
+
+            </select>
+            <button type="submit">検索</button>
+        </form>
+
+
+
+
+
+
+
+
+        {% if comments_query >= 5 %}
+
+        {% else %}
+        <h3>コメントを追加する</h3>
+        <form action="{% url 'create-comment' board.id %}" method="post">
+            {% csrf_token %}
+            <div class="form-group mb-3">
+            <textarea name="content" id="id_content" class="form-control"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">コメントする</button>
+
+
+
+        </form>
+
+        {% endif %}
+    </section>
+    <section>
+        <h3>コメント一覧</h3>
+        <ul class="list-unstyled">
+            {% for comment in comments %}
+            <li class="mb-3">
+
+            <div class="card">
+                <div class="card-header bg-light">
+               <strong>{{ comment.user.username }}</strong> さん - {{ comment.created_at|date:"Y/m/d H:i" }}
+            </div>
+            <div class="card-body">
+                <p class="card-text">
+                    <a href="{% url 'detail-reaction' board.pk comment.pk %}">
+                    {{ comment.content }}</p></a>
+
+
+            </div>
+               <!-- 写真が保存されていた合 -->
+               
+               {% if comment.image %}
+                <div class="form-control">
+               <img src="{{comment.image.url}}" alt="{{ comment.content }}" style="max-width: 200px; height: auto;"><br>
+                </div>
+             {% else %}
+             
+             {% endif %}
+            <div class="card-footer">
+                {% if comment.user == request.user %}
+               <div class="d-flex">
+                <!-- 削除ボタン -->
+                    <form action="{% url "delete-comment" board.pk comment.pk %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">削除する</button>
+
+                    </form>
+                    <!-- 更新 -->
+                  
+                    <a href="{% url "edit-comment" board.pk comment.pk %}" class="btn btn-warning">更新する</a>
+              
+                </div>
+
+
+
+
+                {% else %}
+
+                {% endif %}
+
+
+
+
+
+            </div>
+            </div>
+        
+        </li>
+        {% empty %}
+        <li>コメントはまだありません。</li>
+        {% endfor %}</ul>
+    </section>
+
+
+
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends "base/base.html" %}
+
+{% block title %}コメント編集{% endblock %}
+
+
+{% block content %}
+
+
+
+<h1>「{{comment.content}}」の編集フォームです</h1>
+
+<form action="{% url 'update-comment' board.pk comment.pk %}" enctype="multipart/form-data" method="post">
+    {% csrf_token %}
+    <div class="form-group mb-3">
+        <label>内容:</label>
+    </div>
+    {{ form.content }}
+    <br>
+    <div class="form-group mb-3">
+        <label>写真:</label>
+    </div>
+    {{ form.image }}
+
+
+    <div class="d-flex">
+        <a href="{% url 'detail-board' board.pk %}" class="btn btn-warning">戻る</a>
+
+    <button type="submit" class="btn btn-primary">コメントする</button>
+
+    
+
+</form>
+</div>
+
+
+{% endblock %}

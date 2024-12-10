@@ -1,0 +1,34 @@
+{% extends 'base/base.html' %}
+
+{% block title %}お問合せ{% endblock %}
+
+{% block content %}
+       <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+        <form method="post">
+            {% csrf_token %}
+             <div class="mb-3 row">
+                <label class="col-form-label">メールアドレス</label>
+                <div class="col-sm-8">
+                {{form.email}}
+                </div>
+                <label class="col-form-label">件名</label>
+                <div class="col-sm-8">
+                {{form.title}}</div>
+                <label>メッセージ</label>
+                <div class="col-sm-8">
+                {{form.message}}</div>
+                <div class="col-sm-8 offset-sm-4">
+            <button type="submit" class="btn btn-primary">送信</button>
+            </div>
+        </div>
+   
+
+
+
+
+
+        </form>
+    </div> </div></div>
+{% endblock %}

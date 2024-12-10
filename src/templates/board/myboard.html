@@ -1,0 +1,71 @@
+{% extends "base/base.html" %}
+
+{% block title %}自分の投稿一覧{% endblock %}
+
+
+{% block content %}
+<section>
+ 
+
+
+
+<h1>ボード一覧です</h1>
+
+  <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">掲示板id
+            <a href="{% url 'my-sort' %}?sort=id&direction={{ next_direction|default:'asc' }}">
+              {% include 'sort/direction.html' with sort_field='id' field=sort_by direction=direction %}
+          </th>
+          <th scope="col">タイトル
+            <a href="{% url 'my-sort' %}?sort=title&direction={{ next_direction|default:'asc' }}">
+              {% include 'sort/direction.html' with sort_field='title' field=sort_by direction=direction %}
+          </th>
+          <th scope="col">投稿日時
+            <a href="{% url 'my-sort' %}?sort=created_at&direction={{ next_direction|default:'asc' }}">
+              {% include 'sort/direction.html' with sort_field='created_at' field=sort_by direction=direction %}
+          </th>
+          <th scope="col">更新日時
+            <a href="{% url 'my-sort' %}?sort=updated_at&direction={{ next_direction|default:'asc' }}">
+              {% include 'sort/direction.html' with sort_field='updated_at' field=sort_by direction=direction %}
+          </th>
+        </tr>
+      </thead>
+
+      <tbody>
+          {% for board in boards %}
+              <tr>
+              <th scope="col">{{board.id}}
+
+
+              </th>
+
+
+              <th scope="col"><a href="{% url 'detail-board' board.pk %}">{{board.title}}</a></th>
+              <th scope="col">{{board.created_at}}</th>
+              <th scope="col">{{board.updated_at}}</th>            
+              </tr>
+
+          <!-- 写真が保存されていた合 -->
+              {% if board.image %}
+                <img src="{{board.image.url}}" alt="{{ board.title }}" style="max-width: 200px; height: auto;"><br>>
+
+              {% else %}
+              
+              {% endif %}
+          {% endfor %}
+          </tbody>
+          </table>
+
+
+           <a href={% url "new-board" %} class="btn btn-warning">作成</a>
+           <a href="{% url "board-list" %}" class="btn btn-primary">みんなの投稿</a>
+
+
+</section>
+
+
+
+
+{% endblock %}

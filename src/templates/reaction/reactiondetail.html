@@ -1,0 +1,79 @@
+{% extends "base/base.html" %}
+
+{% block title %}{{board.title}}{% endblock %}
+
+
+{% block content %}
+<section>
+<h1>テスと</h1>
+
+    <table class="table">
+
+        <theader>
+            <th scope="col">id</th>
+            <th scope="col">内容</th>
+            <th scope="col">投稿日時</th>
+            <th scope="col">更新日時</th>
+        </theader>
+
+
+
+
+        <tbody>
+            <th scope="col">{{comment.id}}</th>
+            <th scope="col">{{comment.content}}</th>
+            <th scope="col">{{comment.created_at}}</th>
+            <th scope="col">{{comment.updated_at}}</th>
+        </tbody>
+
+    </table>
+
+    <hr>
+
+    <a href="{% url "create-reaction" board.pk comment.pk %}" class="btn btn-warning">作成する</a>
+
+    <hr>
+    <ul class="list-unstyled">
+    {% for reaction in reactions %}
+    <li class="mb-3">
+    <div class="card">
+        <div class="card-header">
+            id: {{reaction.id}} &emsp;<strong>{{reaction.user.username}}さん</strong> - {{ reaction.created_at|date:"Y/m/d H:i" }}
+            </div>
+        <div class="card-body">
+         <a href="{% url 'edit-reaction'  board.pk comment.pk reaction.pk %}"> {{reaction.content}}</a>
+        
+        </div>
+
+        {% if reaction.image %}
+        <div class="form-control">
+            <img src="{{reaction.image.url}}" alt="{{reaction.content}}" style="max-width:200px; height: auto;"><br>
+
+        </div>
+
+
+        {% endif %} 
+   
+        <div class="card-footer">
+            {% if reaction.user == request.user %}
+            <div class="d-flex">
+
+
+                <!-- reactiondeleteのフォーム送信作成 -->
+                <form action="{% url "delete-reaction" board.pk comment.pk reaction.pk %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">削除する</button>&emsp;
+                </form>
+
+                <a href="{% url "create-reaction" board.pk comment.pk %}" class="btn btn-warning">作成する</a>          
+                </div>
+
+             {% endif %}
+              </div>
+           
+        </div>
+        </li>
+    {% endfor %}
+</ul>
+ </section>
+{% endblock %}

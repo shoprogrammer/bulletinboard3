@@ -1,0 +1,29 @@
+{% extends "base/base.html" %}
+
+{% block title %}{% endblock %}
+
+
+{% block content %}
+<h1>新しくボードを作成します</h1>
+    <section>
+        <form action="{% url 'create-board' %}" method="post" enctype="multipart/form-data" class="mt-4">
+            {% csrf_token %}
+                 <div class="mb-3">
+                    <label for="{{ form.title.id_for_label }}">タイトル</label>
+                </div>
+                 {{ form.title }}<br>
+                <div class="mb-3">
+                    <label for="{{ form.content.id_for_label }}">内容</label>
+                </div>
+                {{ form.content}}<br>
+                <div class="mb-3">
+                    <label for="{{ form.image.id_for_label }}">写真</label>
+                </div>
+                {{ form.image }}<br><br>
+            <button type="submit"class="btn btn-warning">投稿する</button>
+        </form>
+    </section>
+
+
+
+{% endblock %}

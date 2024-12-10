@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <!-- bootのcss -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <!-- bootのjs -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+    <!-- bootのアイコン -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- jqueryのcdn -->
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <!-- js読み込み -->
+     <script src="{% static 'js/common.js' %}"></script>
+
+    <title>
+        {% block title %}{% endblock %}
+    </title>
+</head>
+<body>
+
+    <header>
+        <nav class="navbar bg-dark border-bottom border-bottom-dark" data-bs-theme="dark">
+            <div class="container">
+                <div class="d-flex align-items-center w-100">
+                    <!-- 左側: ヘッダータイトル -->
+                    <h1 class="me-auto">
+                        <a href="{% url 'board-list' %}" class="text-white text-decoration-none">健康掲示板</a>
+                    </h1>
+        
+                    <!-- 右側: 認証済みユーザー表示 -->
+                    {% if user.is_authenticated %}
+                        <div class="d-flex align-items-center ms-auto">
+                            <p class="text-light mb-0 me-3">ようこそ{{ user.username }}さん</p>
+                            <form action="{% url 'logout' %}" method="post" style="display: inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-light">ログアウト</button>
+                            </form>
+                        </div>
+    
+                    {% else %}
+                    <!-- 右側にサインアップとログインボタンを配置 -->
+                    <div class="d-flex ms-auto">
+                        <a href="{% url 'signup' %}" class="btn btn-light me-2">サインアップ</a>
+                        <a href="{% url 'login' %}" class="btn btn-light">ログイン</a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </nav>
+    </header>
+    
+    
+    
+<!-- フラッシュメッセージ -->
+{% if messages %}
+<div class="text-center">
+    {% for message in messages %}
+        {% if message.tags == 'success' %}
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            {{message}}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        
+        {% elif message.tags == 'error' %}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{message}}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endif %}
+
+    {% endfor %}
+</div>
+{% endif %}
+
+
+
+
+    <main>
+        <div class="container">
+        <div class="mb-4">
+    {% block content %}{% endblock %}
+        </div></div>
+
+    </main> 
+
+    <footer class="bg-secondary">
+            <div class="container">
+                <div class="pt-3 pb-1 text-white">
+                    <p class="text-center">&copy;2024:健康掲示板</p>
+                </div>
+
+            </div>
+
+
+
+
+    </footer>
+
+
+
+
+
+</body>
+</html>

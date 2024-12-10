@@ -1,0 +1,26 @@
+{% extends "base/base.html" %}
+
+{% block title %}{{board.title}}{% endblock %}
+
+
+{% block content %}
+    <h1>新しくボードを作成します</h1>
+    <section>
+        <form action="{% url 'create-reaction' board.pk comment.pk %} " method="post" enctype="multipart/form-data" class="mt-4">
+
+            {% csrf_token %}
+         
+            {{ reaction_form.content }}
+        
+            {{ reaction_form.image }}
+            
+
+
+            <button type="submit" class="btn btn-warning">投稿する</button>
+
+        </form>
+    </section>
+
+
+
+{% endblock %}
